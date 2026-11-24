@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON CITY // DaVinci & AE Ultra Motion Reel Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Syne, Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#050509',
+                        panelDark: '#0A0C14',
+                        panelElevated: '#101422',
+                        neonCyan: '#00F5D4',
+                        neonMagenta: '#FF2A85',
+                        neonAmber: '#FFB703',
+                        neonEmerald: '#10B981',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050509;
+            color: #F1F5F9;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Studio Architectural Grid */
+        .studio-bg-grid {
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* Layered Glassmorphism NLE Panel with Luminous Hairline Border */
+        .nle-panel {
+            background: rgba(10, 12, 20, 0.84);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #050509; }
+        ::-webkit-scrollbar-thumb { background: #1C2236; border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00F5D4; }
+
+        /* Precision Studio Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #161A2B;
+            height: 5px;
+            border-radius: 999px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #00F5D4;
+            border: 2px solid #050509;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 245, 212, 0.75);
+            transition: transform 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Equalizer Bar Animation */
+        @keyframes eqDance {
+            0%, 100% { transform: scaleY(0.25); }
+            50% { transform: scaleY(1); }
+        }
+        .eq-bar-active {
+            animation: eqDance 0.45s ease-in-out infinite alternate;
+            transform-origin: bottom;
+        }
+
+        /* Luminous Glows */
+        .glow-cyan { box-shadow: 0 0 22px rgba(0, 245, 212, 0.28); }
+        .glow-magenta { box-shadow: 0 0 22px rgba(255, 42, 133, 0.32); }
+        .text-glow-cyan { text-shadow: 0 0 14px rgba(0, 245, 212, 0.65); }
+    </style>
+</head>
+<body class="studio-bg-grid min-h-screen flex flex-col font-sans antialiased selection:bg-neonCyan/30 selection:text-neonCyan relative">
+
+    <!-- Dynamic Beat-Reactive Ambient Aurora Orbs -->
+    <div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div id="aurora-orb-cyan" class="absolute -top-36 -left-28 w-[560px] h-[560px] rounded-full bg-neonCyan/15 blur-[135px] transition-transform duration-100"></div>
+        <div id="aurora-orb-magenta" class="absolute top-1/4 -right-32 w-[540px] h-[540px] rounded-full bg-neonMagenta/15 blur-[135px] transition-transform duration-100"></div>
+        <div id="aurora-orb-amber" class="absolute -bottom-40 left-1/3 w-[520px] h-[520px] rounded-full bg-purple-600/12 blur-[140px] transition-transform duration-100"></div>
+    </div>
+
+    <!-- Toast Notification Stack -->
+    <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- =====================================================================
+         1. DAVINCI / AE ULTRA-MODERN STUDIO HEADER
+    ====================================================================== -->
+    <header class="sticky top-0 z-30 bg-[#050509]/90 backdrop-blur-2xl border-b border-white/10 px-4 lg:px-6 py-3">
+        <div class="max-w-[1720px] mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+            
+            <!-- Left: Branding + PRO-RES 4444 XQ Indicator + Large Glowing SMPTE Timecode -->
+            <div class="flex flex-wrap items-center justify-between xl:justify-start gap-3 sm:gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonCyan/25 via-neonMagenta/25 to-neonAmber/20 border border-neonCyan/60 flex items-center justify-center text-neonCyan glow-cyan">
+                        <i class="fa-solid fa-film text-base"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-display text-sm sm:text-base font-extrabold tracking-tight text-white">
+                                NEON CITY <span class="text-neonCyan">//</span> <span class="text-slate-200">MOTION REEL STUDIO</span>
+                            </h1>
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-mono text-slate-400 mt-0.5">
+                            <span class="px-1.5 py-0.2 rounded bg-white/5 border border-white/10 text-neonCyan font-semibold">PRO-RES 4444 XQ // 60.00 FPS</span>
+                            <span class="hidden sm:inline">• 12-BIT ACEScct COLOR PIPELINE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Large Glowing SMPTE Timecode & Live FPS -->
+                <div class="flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-[#080A12] border border-neonCyan/30 font-mono">
+                    <div class="flex items-center gap-1.5 text-[11px] text-emerald-400 font-bold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span id="live-fps-readout">60.00 FPS</span>
+                    </div>
+                    <span class="text-slate-700">|</span>
+                    <span id="smpte-timecode" class="text-base sm:text-lg font-bold text-neonCyan text-glow-cyan tracking-widest">00:00:00:00</span>
+                </div>
+            </div>
+
+            <!-- Right: Aspect Ratio Switcher, Audio Reactive Synth + Mini EQ, Render & Export -->
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Aspect Ratio Switcher -->
+                <div class="inline-flex p-1 rounded-xl bg-[#0A0C14] border border-white/10 font-mono text-[11px]" role="group" aria-label="Pilih Rasio Aspek">
+                    <button type="button" data-aspect="16:9" class="aspect-btn px-2.5 py-1.5 rounded-lg font-bold bg-neonCyan text-[#050509] shadow transition">
+                        16:9 YouTube 4K
+                    </button>
+                    <button type="button" data-aspect="9:16" class="aspect-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        9:16 Reels / TikTok
+                    </button>
+                    <button type="button" data-aspect="2.39:1" class="aspect-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        2.39:1 Anamorphic
+                    </button>
+                </div>
+
+                <!-- Audio Reactive Synth & SFX Toggle with Mini Equalizer Bars -->
+                <button id="btn-toggle-audio" type="button" class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0A0C14] hover:bg-[#131726] border border-neonAmber/45 text-neonAmber text-xs font-mono font-bold transition active:scale-95">
+                    <i id="audio-icon" class="fa-solid fa-volume-xmark"></i>
+                    <span id="audio-label">SYNTH &amp; SFX: OFF</span>
+                    <!-- Mini Equalizer Visualizer -->
+                    <span id="header-eq-bars" class="inline-flex items-end gap-0.5 h-3.5 ml-0.5">
+                        <span class="w-0.5 h-full bg-neonAmber/40 rounded-full" style="animation-delay: 0.0s"></span>
+                        <span class="w-0.5 h-full bg-neonCyan/40 rounded-full" style="animation-delay: 0.15s"></span>
+                        <span class="w-0.5 h-full bg-neonMagenta/40 rounded-full" style="animation-delay: 0.3s"></span>
+                        <span class="w-0.5 h-full bg-neonAmber/40 rounded-full" style="animation-delay: 0.1s"></span>
+                    </span>
+                </button>
+
+                <!-- Render & Export CTA -->
+                <button id="btn-open-export" type="button" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-neonCyan via-[#00D4B8] to-neonMagenta hover:brightness-110 text-[#050509] text-xs font-extrabold shadow-lg shadow-neonCyan/25 transition active:scale-95">
+                    <i class="fa-solid fa-clapperboard"></i>
+                    <span>Render &amp; Export</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         MAIN STUDIO WORKSPACE
+    ====================================================================== -->
+    <main class="relative z-10 flex-1 max-w-[1720px] w-full mx-auto px-4 lg:px-6 py-5 space-y-6">
+
+        <!-- =================================================================
+             2. MASTER PROGRAM VIEWPORT (8 COLS) + 3. COLOR GRADING & SCOPES (4 COLS)
+        ================================================================== -->
+        <section class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+            
+            <!-- Left: Master 60fps Canvas Viewport (8 Kolom) -->
+            <div class="xl:col-span-8 nle-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+                
+                <!-- Viewer Header Bar -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div class="flex items-center gap-2.5">
+                        <span class="px-2 py-0.5 rounded bg-neonMagenta/20 text-neonMagenta border border-neonMagenta/40 font-mono text-[10px] font-bold">PROGRAM MONITOR</span>
+                        <h2 id="active-scene-title" class="font-display text-sm sm:text-base font-extrabold text-white tracking-wide">SCENE 01 // NEON OVERDRIVE</h2>
+                    </div>
+
+                    <!-- Quick Chapter Jump Pills -->
+                    <div class="flex flex-wrap items-center gap-1 font-mono text-[10px]">
+                        <button type="button" data-scene="0" class="scene-pill-btn px-2.5 py-1 rounded-lg bg-neonCyan text-[#050509] font-bold transition">01 Overdrive</button>
+                        <button type="button" data-scene="1" class="scene-pill-btn px-2.5 py-1 rounded-lg bg-white/5 text-slate-400 hover:text-white transition">02 Velocity</button>
+                        <button type="button" data-scene="2" class="scene-pill-btn px-2.5 py-1 rounded-lg bg-white/5 text-slate-400 hover:text-white transition">03 Pulse</button>
+                        <button type="button" data-scene="3" class="scene-pill-btn px-2.5 py-1 rounded-lg bg-white/5 text-slate-400 hover:text-white transition">04 Warp Noir</button>
+                        <button type="button" data-scene="4" class="scene-pill-btn px-2.5 py-1 rounded-lg bg-white/5 text-slate-400 hover:text-white transition">05 Launch</button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Canvas Stage with Interactive Draggable Before/After Split -->
+                <div class="relative w-full bg-[#020306] rounded-2xl border border-white/10 min-h-[350px] sm:min-h-[440px] flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+                    <div id="viewport-frame-box" class="relative w-full max-w-[840px] aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/15 transition-all duration-500 select-none">
+                        <canvas id="motionReelCanvas" width="1280" height="720" class="w-full h-full block"></canvas>
+
+                        <!-- Interactive Draggable Split-Screen Wipe Overlay -->
+                        <div id="split-drag-overlay" class="hidden absolute inset-0 cursor-ew-resize z-10">
+                            <div id="split-divider-line" class="absolute inset-y-0 w-0.5 bg-neonCyan shadow-[0_0_16px_#00F5D4]" style="left: 50%;">
+                                <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 px-2.5 py-1.5 rounded-full bg-[#050509]/95 border-2 border-neonCyan text-[10px] font-mono font-bold text-neonCyan whitespace-nowrap shadow-xl flex items-center gap-1.5">
+                                    <span>RAW</span>
+                                    <i class="fa-solid fa-arrows-left-right text-[9px]"></i>
+                                    <span>LUT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top-Right Technical Telemetry Badge -->
+                    <div class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/10 font-mono text-[10px] text-slate-300 pointer-events-none">
+                        <span id="viewer-res-badge">3840×2160 • 16:9 ACES</span>
+                    </div>
+                </div>
+
+                <!-- Precision Scrubber Bar -->
+                <div class="space-y-1.5">
+                    <div id="reel-scrubber-track" class="relative w-full h-3 bg-[#141828] rounded-full cursor-pointer overflow-hidden border border-white/10">
+                        <div class="absolute inset-y-0 left-[20%] w-px bg-white/25 z-10 pointer-events-none"></div>
+                        <div class="absolute inset-y-0 left-[40%] w-px bg-white/25 z-10 pointer-events-none"></div>
+                        <div class="absolute inset-y-0 left-[60%] w-px bg-white/25 z-10 pointer-events-none"></div>
+                        <div class="absolute inset-y-0 left-[80%] w-px bg-white/25 z-10 pointer-events-none"></div>
+                        <div id="reel-scrubber-fill" class="h-full bg-gradient-to-r from-neonCyan via-neonMagenta to-neonAmber rounded-full" style="width: 0%;"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                        <span>00:00 Overdrive</span>
+                        <span>00:06 Velocity</span>
+                        <span>00:12 Kinetic Pulse</span>
+                        <span>00:18 Warp Noir</span>
+                        <span>00:24 – 00:30 Launch</span>
+                    </div>
+                </div>
+
+                <!-- Transport & VFX Trigger Controls -->
+                <div class="flex flex-wrap items-center justify-between gap-2.5 pt-1 border-t border-white/10">
+                    <div class="flex items-center gap-2">
+                        <button id="btn-play-pause" type="button" class="px-4 py-2 rounded-xl bg-neonCyan hover:bg-[#33f7dd] text-[#050509] font-mono text-xs font-extrabold flex items-center gap-2 transition active:scale-95">
+                            <i id="play-icon" class="fa-solid fa-pause"></i>
+                            <span id="play-label">PAUSE</span>
+                        </button>
+
+                        <div class="inline-flex p-1 rounded-xl bg-[#050509] border border-white/10 font-mono text-[11px]">
+                            <button type="button" data-speed="0.5" class="speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white transition">0.5x</button>
+                            <button type="button" data-speed="1.0" class="speed-btn px-2 py-1 rounded-lg bg-white/15 text-white font-bold transition">1.0x</button>
+                            <button type="button" data-speed="1.5" class="speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white transition">1.5x</button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="btn-toggle-safezone" type="button" class="px-3 py-2 rounded-xl bg-[#050509] hover:bg-white/10 border border-white/15 text-xs font-mono text-slate-300 transition">
+                            <i class="fa-solid fa-crop-simple mr-1.5 text-neonCyan"></i>Safe-Zone: OFF
+                        </button>
+
+                        <button id="btn-beat-drop" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-neonMagenta to-purple-600 hover:brightness-110 text-white text-xs font-extrabold shadow-lg shadow-neonMagenta/35 transition active:scale-95 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Beat Drop / Glitch Burst</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Color Grading, Live RGB Parade Scope, VFX & Brand Customizer (4 Kolom) -->
+            <div class="xl:col-span-4 nle-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-3.5">
+                
+                <!-- 1. Live Lumetri RGB Parade / Waveform Scope -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-wave-square text-neonCyan"></i> Live RGB Parade &amp; Luma Scope
+                        </span>
+                        <span class="font-mono text-[10px] text-emerald-400">IRE 0–100</span>
+                    </div>
+                    <div class="bg-[#040509] rounded-xl border border-white/10 p-1.5 overflow-hidden">
+                        <canvas id="lumetriScopeCanvas" width="360" height="72" class="w-full h-[64px] block rounded-lg"></canvas>
+                    </div>
+                </div>
+
+                <!-- 2. 5 Cinematic Color Grading LUT Presets -->
+                <div class="space-y-2 pt-2 border-t border-white/10">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display text-xs font-extrabold uppercase tracking-wider text-neonCyan flex items-center gap-1.5">
+                            <i class="fa-solid fa-swatchbook"></i> Color Grading LUTs (5)
+                        </h3>
+                        <label class="inline-flex items-center gap-1.5 text-[11px] font-mono text-neonCyan cursor-pointer">
+                            <input id="chk-split-compare" type="checkbox" class="accent-neonCyan rounded">
+                            <span>Split Wipe</span>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+                        <button type="button" data-lut="cyber_teal" class="lut-btn p-2 rounded-xl bg-[#121729] border-2 border-neonCyan text-white text-left transition flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="block font-bold truncate">Cyberpunk Teal</span>
+                                <span class="text-[9px] font-mono text-neonCyan block">Teal &amp; Magenta</span>
+                            </div>
+                            <span class="flex gap-0.5 shrink-0"><span class="w-2.5 h-5 rounded-sm bg-[#00F5D4]"></span><span class="w-2.5 h-5 rounded-sm bg-[#FF2A85]"></span></span>
+                        </button>
+
+                        <button type="button" data-lut="blade_amber" class="lut-btn p-2 rounded-xl bg-[#070910] border border-white/10 text-slate-300 hover:border-white/25 text-left transition flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="block font-bold truncate">Blade Amber Noir</span>
+                                <span class="text-[9px] font-mono text-neonAmber block">Warm Gold Noir</span>
+                            </div>
+                            <span class="flex gap-0.5 shrink-0"><span class="w-2.5 h-5 rounded-sm bg-[#FFB703]"></span><span class="w-2.5 h-5 rounded-sm bg-[#FB8500]"></span></span>
+                        </button>
+
+                        <button type="button" data-lut="tokyo_blue" class="lut-btn p-2 rounded-xl bg-[#070910] border border-white/10 text-slate-300 hover:border-white/25 text-left transition flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="block font-bold truncate">Tokyo Midnight</span>
+                                <span class="text-[9px] font-mono text-sky-400 block">Cobalt &amp; Violet</span>
+                            </div>
+                            <span class="flex gap-0.5 shrink-0"><span class="w-2.5 h-5 rounded-sm bg-[#38BDF8]"></span><span class="w-2.5 h-5 rounded-sm bg-[#818CF8]"></span></span>
+                        </button>
+
+                        <button type="button" data-lut="neo_emerald" class="lut-btn p-2 rounded-xl bg-[#070910] border border-white/10 text-slate-300 hover:border-white/25 text-left transition flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="block font-bold truncate">Neo-Emerald Matrix</span>
+                                <span class="text-[9px] font-mono text-emerald-400 block">Phosphor Cyber</span>
+                            </div>
+                            <span class="flex gap-0.5 shrink-0"><span class="w-2.5 h-5 rounded-sm bg-[#10B981]"></span><span class="w-2.5 h-5 rounded-sm bg-[#84CC16]"></span></span>
+                        </button>
+
+                        <button type="button" data-lut="raw_log" class="lut-btn col-span-2 p-2 rounded-xl bg-[#070910] border border-white/10 text-slate-300 hover:border-white/25 text-left transition flex items-center justify-between">
+                            <div>
+                                <span class="font-bold">Raw Log (Flat S-Log3 Base)</span>
+                                <span class="text-[9px] font-mono text-slate-400 ml-2">Un-graded Reference</span>
+                            </div>
+                            <span class="flex gap-0.5"><span class="w-3 h-3 rounded-sm bg-[#64748B]"></span><span class="w-3 h-3 rounded-sm bg-[#94A3B8]"></span></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Precision VFX Sliders (5 Sliders) -->
+                <div class="space-y-1.5 pt-2 border-t border-white/10">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display text-xs font-extrabold uppercase tracking-wider text-neonMagenta flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> VFX &amp; Optics Rack
+                        </h3>
+                        <button id="btn-reset-vfx" type="button" class="text-[10px] font-mono text-slate-400 hover:text-neonCyan">Reset</button>
+                    </div>
+
+                    <div class="space-y-1.5 font-mono text-[10px]">
+                        <div>
+                            <div class="flex justify-between mb-0.5">
+                                <span class="text-slate-300">Chromatic Aberration (RGB)</span>
+                                <span id="val-rgb" class="text-neonCyan font-bold">35%</span>
+                            </div>
+                            <input id="slider-rgb" type="range" min="0" max="100" value="35" class="w-full">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-0.5">
+                                <span class="text-slate-300">Anamorphic Lens Flare</span>
+                                <span id="val-flare" class="text-neonAmber font-bold">65%</span>
+                            </div>
+                            <input id="slider-flare" type="range" min="0" max="100" value="65" class="w-full">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-0.5">
+                                <span class="text-slate-300">Glow / Halation Bloom</span>
+                                <span id="val-halation" class="text-neonMagenta font-bold">55%</span>
+                            </div>
+                            <input id="slider-halation" type="range" min="0" max="100" value="55" class="w-full">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5 pt-0.5">
+                            <div>
+                                <div class="flex justify-between mb-0.5">
+                                    <span class="text-slate-300">35mm Grain</span>
+                                    <span id="val-grain" class="text-slate-200 font-bold">25%</span>
+                                </div>
+                                <input id="slider-grain" type="range" min="0" max="100" value="25" class="w-full">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-0.5">
+                                    <span class="text-slate-300">Vignette</span>
+                                    <span id="val-vignette" class="text-slate-200 font-bold">45%</span>
+                                </div>
+                                <input id="slider-vignette" type="range" min="0" max="100" value="45" class="w-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Live Kinetic Brand Customizer + Custom Accent Picker -->
+                <div class="space-y-2 pt-2 border-t border-white/10">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display text-xs font-extrabold uppercase tracking-wider text-neonAmber flex items-center gap-1.5">
+                            <i class="fa-solid fa-font"></i> Kinetic Brand Customizer
+                        </h3>
+                        <label class="inline-flex items-center gap-1.5 text-[10px] font-mono text-slate-300 cursor-pointer" title="Ubah Warna Aksen Neon Utama di Canvas">
+                            <span>Aksen Neon:</span>
+                            <input id="picker-custom-accent" type="color" value="#00F5D4" class="w-5 h-5 rounded cursor-pointer bg-transparent border-0">
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-1.5">
+                        <input id="input-brand-title" type="text" maxlength="24" value="NEON CITY // STUDIO" aria-label="Nama Brand" placeholder="Nama Brand / Kreator" class="w-full rounded-xl bg-[#050509] border border-white/15 focus:border-neonCyan px-3 py-1.5 text-xs font-display font-bold text-white focus:outline-none">
+                        <input id="input-brand-tagline" type="text" maxlength="36" value="KINETIC VISUALS • 60FPS" aria-label="Tagline" placeholder="Tagline Sub-Layer" class="w-full rounded-xl bg-[#050509] border border-white/15 focus:border-neonCyan px-3 py-1.5 text-[11px] font-mono text-neonCyan focus:outline-none">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =================================================================
+             4. SCENE STORYBOARD CARDS + MULTI-TRACK NLE TIMELINE
+        ================================================================== -->
+        <section class="nle-panel rounded-2xl p-4 sm:p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <h2 class="font-display text-sm sm:text-base font-extrabold text-white">Scene Storyboard &amp; Multi-Track NLE Timeline</h2>
+                    <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 font-mono text-[10px] text-slate-400">30.00s • 1800 Frames @ 60fps</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
+                    <span class="px-2 py-0.5 rounded bg-neonCyan/15 text-neonCyan border border-neonCyan/30">3D Extrude</span>
+                    <span class="px-2 py-0.5 rounded bg-neonMagenta/15 text-neonMagenta border border-neonMagenta/30">Particle Burst</span>
+                    <span class="px-2 py-0.5 rounded bg-neonAmber/15 text-neonAmber border border-neonAmber/30">Warp Tunnel</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Audio Spectrum</span>
+                </div>
+            </div>
+
+            <!-- 5 Scene Storyboard Thumbnail Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <button type="button" data-scene="0" class="storyboard-card p-2 rounded-xl bg-[#070910] border-2 border-neonCyan text-left transition group">
+                    <div class="relative rounded-lg overflow-hidden aspect-video bg-black mb-1.5 border border-white/10">
+                        <canvas id="thumb-scene-0" width="240" height="135" class="w-full h-full block"></canvas>
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-neonCyan">00:00–00:06</span>
+                    </div>
+                    <p class="font-display text-[11px] font-extrabold text-white truncate">01. NEON OVERDRIVE</p>
+                    <p class="text-[10px] font-mono text-slate-400 truncate">3D City &amp; Kinetic Extrude</p>
+                </button>
+
+                <button type="button" data-scene="1" class="storyboard-card p-2 rounded-xl bg-[#070910] border border-white/10 hover:border-white/30 text-left transition group">
+                    <div class="relative rounded-lg overflow-hidden aspect-video bg-black mb-1.5 border border-white/10">
+                        <canvas id="thumb-scene-1" width="240" height="135" class="w-full h-full block"></canvas>
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-slate-300">00:06–00:12</span>
+                    </div>
+                    <p class="font-display text-[11px] font-extrabold text-white truncate">02. BRAND VELOCITY</p>
+                    <p class="text-[10px] font-mono text-slate-400 truncate">Orbital Rings &amp; Shockwave</p>
+                </button>
+
+                <button type="button" data-scene="2" class="storyboard-card p-2 rounded-xl bg-[#070910] border border-white/10 hover:border-white/30 text-left transition group">
+                    <div class="relative rounded-lg overflow-hidden aspect-video bg-black mb-1.5 border border-white/10">
+                        <canvas id="thumb-scene-2" width="240" height="135" class="w-full h-full block"></canvas>
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-slate-300">00:12–00:18</span>
+                    </div>
+                    <p class="font-display text-[11px] font-extrabold text-white truncate">03. KINETIC PULSE</p>
+                    <p class="text-[10px] font-mono text-slate-400 truncate">3D Audio Visualizer Type</p>
+                </button>
+
+                <button type="button" data-scene="3" class="storyboard-card p-2 rounded-xl bg-[#070910] border border-white/10 hover:border-white/30 text-left transition group">
+                    <div class="relative rounded-lg overflow-hidden aspect-video bg-black mb-1.5 border border-white/10">
+                        <canvas id="thumb-scene-3" width="240" height="135" class="w-full h-full block"></canvas>
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-slate-300">00:18–00:24</span>
+                    </div>
+                    <p class="font-display text-[11px] font-extrabold text-white truncate">04. CYBER NOIR GRADE</p>
+                    <p class="text-[10px] font-mono text-slate-400 truncate">Warp Tunnel &amp; Diagonal Wipe</p>
+                </button>
+
+                <button type="button" data-scene="4" class="storyboard-card col-span-2 sm:col-span-1 p-2 rounded-xl bg-[#070910] border border-white/10 hover:border-white/30 text-left transition group">
+                    <div class="relative rounded-lg overflow-hidden aspect-video bg-black mb-1.5 border border-white/10">
+                        <canvas id="thumb-scene-4" width="240" height="135" class="w-full h-full block"></canvas>
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-slate-300">00:24–00:30</span>
+                    </div>
+                    <p class="font-display text-[11px] font-extrabold text-white truncate">05. READY TO LAUNCH</p>
+                    <p class="text-[10px] font-mono text-slate-400 truncate">Hologram Closing Card</p>
+                </button>
+            </div>
+
+            <!-- Interactive Multi-Track NLE Timeline -->
+            <div class="overflow-x-auto">
+                <div id="nle-timeline-area" class="relative min-w-[780px] bg-[#05070D] rounded-xl border border-white/10 p-3 space-y-2 select-none cursor-pointer">
+                    
+                    <!-- Moving Synced Playhead -->
+                    <div id="nle-playhead" class="absolute top-0 bottom-0 w-0.5 bg-neonMagenta z-20 pointer-events-none shadow-[0_0_12px_#FF2A85]" style="left: 16.8%;">
+                        <div class="w-3 h-3 -ml-[5px] bg-neonMagenta rotate-45 -mt-1"></div>
+                    </div>
+
+                    <!-- Track V3: VFX & LUT -->
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <div class="col-span-2 font-mono text-[10px] text-neonAmber font-bold flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-neonAmber/15 border border-neonAmber/30">V3</span> VFX &amp; LUT
+                        </div>
+                        <div class="col-span-10 grid grid-cols-5 gap-1 text-[10px] font-mono">
+                            <div data-scene="0" class="nle-clip px-2 py-1.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-200 truncate hover:brightness-125">Neon Rain + Flare</div>
+                            <div data-scene="1" class="nle-clip px-2 py-1.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-200 truncate hover:brightness-125">Shockwave Burst</div>
+                            <div data-scene="2" class="nle-clip px-2 py-1.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-100 truncate hover:brightness-125">RGB Glitch Spike</div>
+                            <div data-scene="3" class="nle-clip px-2 py-1.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-200 truncate hover:brightness-125">Warp Distortion</div>
+                            <div data-scene="4" class="nle-clip px-2 py-1.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-200 truncate hover:brightness-125">Hologram Scan</div>
+                        </div>
+                    </div>
+
+                    <!-- Track V2: Kinetic Type -->
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <div class="col-span-2 font-mono text-[10px] text-neonMagenta font-bold flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-neonMagenta/15 border border-neonMagenta/30">V2</span> Kinetic Type
+                        </div>
+                        <div class="col-span-10 grid grid-cols-5 gap-1 text-[10px] font-mono">
+                            <div data-scene="0" class="nle-clip px-2 py-1.5 rounded bg-pink-500/15 border border-pink-500/40 text-pink-200 truncate hover:brightness-125">3D Extrude Reveal</div>
+                            <div data-scene="1" class="nle-clip px-2 py-1.5 rounded bg-pink-500/15 border border-pink-500/40 text-pink-200 truncate hover:brightness-125">Particle Re-assemble</div>
+                            <div data-scene="2" class="nle-clip px-2 py-1.5 rounded bg-pink-500/20 border border-pink-400/50 text-pink-100 truncate hover:brightness-125">Beat-Sync Cascade</div>
+                            <div data-scene="3" class="nle-clip px-2 py-1.5 rounded bg-pink-500/15 border border-pink-500/40 text-pink-200 truncate hover:brightness-125">Diagonal LUT Wipe</div>
+                            <div data-scene="4" class="nle-clip px-2 py-1.5 rounded bg-pink-500/15 border border-pink-500/40 text-pink-200 truncate hover:brightness-125">4K 60FPS Badge</div>
+                        </div>
+                    </div>
+
+                    <!-- Track V1: 3D Motion Comp -->
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <div class="col-span-2 font-mono text-[10px] text-neonCyan font-bold flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-neonCyan/15 border border-neonCyan/30">V1</span> 3D Motion
+                        </div>
+                        <div class="col-span-10 grid grid-cols-5 gap-1 text-[10px] font-mono">
+                            <div data-scene="0" class="nle-clip px-2 py-2 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-100 font-bold truncate hover:brightness-125">01. Neon Overdrive</div>
+                            <div data-scene="1" class="nle-clip px-2 py-2 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-100 font-bold truncate hover:brightness-125">02. Brand Velocity</div>
+                            <div data-scene="2" class="nle-clip px-2 py-2 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-100 font-bold truncate hover:brightness-125">03. Kinetic Pulse</div>
+                            <div data-scene="3" class="nle-clip px-2 py-2 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-100 font-bold truncate hover:brightness-125">04. Cyber Noir Grade</div>
+                            <div data-scene="4" class="nle-clip px-2 py-2 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-100 font-bold truncate hover:brightness-125">05. Ready To Launch</div>
+                        </div>
+                    </div>
+
+                    <!-- Track A1: Bass & SFX with Beat Markers -->
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <div class="col-span-2 font-mono text-[10px] text-emerald-400 font-bold flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30">A1</span> Bass &amp; SFX
+                        </div>
+                        <div class="col-span-10 h-7 rounded bg-emerald-950/50 border border-emerald-500/30 px-2 flex items-center gap-0.5 overflow-hidden" id="audio-waveform-bars"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             5. CREATOR & BRAND DELIVERABLES SHOWCASE CARDS
+        ================================================================== -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div data-deliverable-aspect="16:9" data-deliverable-scene="0" class="deliverable-card nle-panel rounded-2xl p-5 hover:border-neonCyan/55 cursor-pointer transition group space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div class="w-10 h-10 rounded-xl bg-neonCyan/15 border border-neonCyan/30 flex items-center justify-center text-neonCyan">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full font-mono text-[10px] font-bold bg-neonCyan/15 text-neonCyan border border-neonCyan/30">3840×2160 • 60FPS</span>
+                </div>
+                <h3 class="font-display text-sm sm:text-base font-extrabold text-white group-hover:text-neonCyan transition">YouTube 4K UHD H.265 Master</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Master layar lebar 16:9 dengan dynamic range ACEScct, kinetic 3D opener, dan mastering audio -14 LUFS.</p>
+            </div>
+
+            <div data-deliverable-aspect="9:16" data-deliverable-scene="2" class="deliverable-card nle-panel rounded-2xl p-5 hover:border-neonMagenta/55 cursor-pointer transition group space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div class="w-10 h-10 rounded-xl bg-neonMagenta/15 border border-neonMagenta/30 flex items-center justify-center text-neonMagenta">
+                        <i class="fa-brands fa-instagram text-lg"></i>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full font-mono text-[10px] font-bold bg-neonMagenta/15 text-neonMagenta border border-neonMagenta/30">1080×1920 • 9:16</span>
+                </div>
+                <h3 class="font-display text-sm sm:text-base font-extrabold text-white group-hover:text-neonMagenta transition">Instagram Reels / TikTok 60fps</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Framing vertikal presisi dengan Title Safe-Zone anti-terpotong antarmuka aplikasi dan beat-drop transition.</p>
+            </div>
+
+            <div data-deliverable-aspect="2.39:1" data-deliverable-scene="3" class="deliverable-card nle-panel rounded-2xl p-5 hover:border-neonAmber/55 cursor-pointer transition group space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div class="w-10 h-10 rounded-xl bg-neonAmber/15 border border-neonAmber/30 flex items-center justify-center text-neonAmber">
+                        <i class="fa-solid fa-wand-sparkles text-lg"></i>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full font-mono text-[10px] font-bold bg-neonAmber/15 text-neonAmber border border-neonAmber/30">2.39:1 • ANAMORPHIC</span>
+                </div>
+                <h3 class="font-display text-sm sm:text-base font-extrabold text-white group-hover:text-neonAmber transition">CinemaScope Brand Opener</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Rasio sinema 2.39:1 dengan lens flare anamorphic horizontal, film grain 35mm, dan LUT gradasi sinematik.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================================
+         6. RENDER & EXPORT MODAL WITH LIVE FRAME PREVIEW & HIGH-RES PNG
+    ====================================================================== -->
+    <div id="export-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+        <div class="nle-panel rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 border-neonCyan/40">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3.5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-neonCyan/20 border border-neonCyan/40 flex items-center justify-center text-neonCyan">
+                        <i class="fa-solid fa-clapperboard"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-base font-extrabold text-white">Render &amp; Export Master Studio</h3>
+                        <p class="text-xs font-mono text-slate-400">60.00 FPS • ACEScct Rec.709 • 48kHz / 24-bit PCM</p>
+                    </div>
+                </div>
+                <button id="btn-close-export" type="button" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Live Render Frame Preview + Delivery Preset -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                <div class="sm:col-span-5 rounded-xl overflow-hidden border border-white/15 bg-black aspect-video relative">
+                    <canvas id="exportPreviewCanvas" width="320" height="180" class="w-full h-full block"></canvas>
+                    <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 font-mono text-[9px] text-neonCyan">LIVE RENDER FEED</span>
+                </div>
+
+                <div class="sm:col-span-7 space-y-2.5 text-xs font-mono">
+                    <div class="p-3 rounded-xl bg-[#050509] border border-white/10">
+                        <span class="text-[10px] text-slate-400 block">DELIVERY PRESET</span>
+                        <select id="export-preset-select" class="w-full bg-transparent font-bold text-neonCyan mt-1 focus:outline-none">
+                            <option value="YouTube 4K UHD H.265 (60fps)" class="bg-[#0A0C14]">YouTube 4K UHD H.265 (3840×2160)</option>
+                            <option value="Instagram Reels / TikTok 1080×1920 60fps" class="bg-[#0A0C14]">Instagram Reels / TikTok (1080×1920)</option>
+                            <option value="Master Apple ProRes 422 HQ" class="bg-[#0A0C14]">Master ProRes 422 HQ (220 Mbps)</option>
+                        </select>
+                    </div>
+                    <div class="p-3 rounded-xl bg-[#050509] border border-white/10 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">ACTIVE LUT &amp; ASPECT</span>
+                            <strong id="export-spec-summary" class="text-white">16:9 • CYBER_TEAL</strong>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">1800 FRAMES</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Encoding Progress Bar -->
+            <div class="p-4 rounded-xl bg-[#050509] border border-white/10 space-y-2">
+                <div class="flex items-center justify-between text-xs font-mono">
+                    <span id="export-status-text" class="text-slate-300">Siap merender komposisi 30.00 detik...</span>
+                    <span id="export-percent-text" class="text-neonCyan font-bold">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
+                    <div id="export-progress-bar" class="h-full bg-gradient-to-r from-neonCyan via-neonMagenta to-neonAmber rounded-full transition-all duration-100" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Export Actions -->
+            <div class="flex flex-wrap items-center justify-end gap-2.5 pt-1">
+                <button id="btn-download-snapshot" type="button" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-neonAmber"></i>
+                    <span>Download High-Res Frame PNG</span>
+                </button>
+                <button id="btn-start-render" type="button" class="px-5 py-2.5 rounded-xl bg-neonCyan hover:bg-[#33f7dd] text-[#050509] text-xs font-extrabold shadow-lg shadow-neonCyan/25 transition flex items-center gap-2">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Mulai Render Master</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT ENGINE: 60FPS 3D CANVAS MOTION, LUMETRI SCOPES & SYNTH
+    ====================================================================== -->
+    <script>
+        (function () {
+            'use strict';
+
+            const TOTAL_DURATION = 30.0;
+            const SCENE_DURATION = 6.0;
+
+            const sceneMeta = [
+                { id: 0, title: 'SCENE 01 // NEON OVERDRIVE' },
+                { id: 1, title: 'SCENE 02 // BRAND VELOCITY' },
+                { id: 2, title: 'SCENE 03 // KINETIC PULSE' },
+                { id: 3, title: 'SCENE 04 // CYBER NOIR GRADE' },
+                { id: 4, title: 'SCENE 05 // READY TO LAUNCH' }
+            ];
+
+            const state = {
+                isPlaying: true,
+                currentTime: 0.0,
+                playbackSpeed: 1.0,
+                aspectRatio: '16:9',
+                showSafeZone: false,
+                audioEnabled: false,
+                lut: 'cyber_teal',
+                customAccent: null, // null means use LUT primary, or hex string if user picked custom
+                splitCompare: false,
+                splitPos: 50,
+                vfx: {
+                    rgb: 35,
+                    flare: 65,
+                    halation: 55,
+                    grain: 25,
+                    vignette: 45
+                },
+                brandTitle: 'NEON CITY // STUDIO',
+                brandTagline: 'KINETIC VISUALS • 60FPS',
+                beatDropImpulse: 0,
+                lastSceneIdx: 0,
+                beatPulseAccumulator: 0
+            };
+
+            // =================================================================
+            // 1. WEB AUDIO PROCEDURAL SYNTH & BEAT ENGINE
+            // =================================================================
+            let audioCtx = null;
+
+            function initAudio() {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            }
+
+            function playSoundFX(type) {
+                if (!state.audioEnabled) return;
+                try {
+                    initAudio();
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    if (type === 'click') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(840, now);
+                        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.04);
+                        gain.gain.setValueAtTime(0.05, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+                        osc.start(now);
+                        osc.stop(now + 0.045);
+                    } else if (type === 'whoosh') {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(100, now);
+                        osc.frequency.exponentialRampToValueAtTime(560, now + 0.16);
+                        osc.frequency.exponentialRampToValueAtTime(85, now + 0.36);
+                        gain.gain.setValueAtTime(0.001, now);
+                        gain.gain.linearRampToValueAtTime(0.11, now + 0.14);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+                        osc.start(now);
+                        osc.stop(now + 0.38);
+                    } else if (type === 'bass') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(140, now);
+                        osc.frequency.exponentialRampToValueAtTime(38, now + 0.34);
+                        gain.gain.setValueAtTime(0.18, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+                        osc.start(now);
+                        osc.stop(now + 0.36);
+                    }
+                } catch (e) {}
+            }
+
+            function showToast(title, message, accent = 'cyan') {
+                const container = document.getElementById('toast-container');
+                const el = document.createElement('div');
+                const borderCol = accent === 'magenta' ? 'border-neonMagenta/70' : accent === 'amber' ? 'border-neonAmber/70' : 'border-neonCyan/70';
+                el.className = `pointer-events-auto nle-panel border ${borderCol} rounded-xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0`;
+                el.innerHTML = `<p class="font-display text-xs font-extrabold text-white">${title}</p><p class="text-[11px] text-slate-300 mt-0.5">${message}</p>`;
+                container.appendChild(el);
+                requestAnimationFrame(() => el.classList.remove('translate-y-2', 'opacity-0'));
+                setTimeout(() => {
+                    el.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => el.remove(), 300);
+                }, 3000);
+            }
+
+            // =================================================================
+            // 2. EASING, LUT PALETTES & PROCEDURAL PARTICLES
+            // =================================================================
+            function springEase(t) {
+                const c4 = (2 * Math.PI) / 3;
+                return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+            }
+
+            function easeOutExpo(x) {
+                return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+            }
+
+            const neonRain = Array.from({ length: 70 }, (_, i) => ({
+                x: (i * 137) % 1440,
+                y: (i * 89) % 1280,
+                len: 16 + (i % 4) * 10,
+                speed: 750 + (i % 5) * 180,
+                isPrimary: i % 3 !== 0
+            }));
+
+            const warpStars = Array.from({ length: 90 }, (_, i) => ({
+                angle: (i / 90) * Math.PI * 2,
+                dist: 0.05 + ((i * 37) % 100) / 100,
+                speed: 0.55 + (i % 4) * 0.22,
+                colType: i % 3
+            }));
+
+            function getLutPalette(lutKey) {
+                let base;
+                if (lutKey === 'blade_amber') {
+                    base = { bgTop: '#0A0603', bgBot: '#1E1005', primary: '#FFB703', secondary: '#FB8500', accent: '#00F5D4' };
+                } else if (lutKey === 'tokyo_blue') {
+                    base = { bgTop: '#030612', bgBot: '#0B1838', primary: '#38BDF8', secondary: '#818CF8', accent: '#F472B6' };
+                } else if (lutKey === 'neo_emerald') {
+                    base = { bgTop: '#030B07', bgBot: '#072214', primary: '#10B981', secondary: '#84CC16', accent: '#00F5D4' };
+                } else if (lutKey === 'raw_log') {
+                    base = { bgTop: '#191B20', bgBot: '#252830', primary: '#94A3B8', secondary: '#64748B', accent: '#CBD5E1' };
+                } else {
+                    base = { bgTop: '#05050B', bgBot: '#140824', primary: '#00F5D4', secondary: '#FF2A85', accent: '#FFB703' };
+                }
+
+                if (state.customAccent && lutKey !== 'raw_log') {
+                    base.primary = state.customAccent;
+                }
+                return base;
+            }
+
+            // 3D Extruded Kinetic Text Renderer with Chromatic Aberration & Halation
+            function draw3DKineticText(ctx, text, x, y, fontStr, fillStyle, extrudeCol, rgbOffsetPx, halationAmt) {
+                ctx.save();
+                ctx.font = fontStr;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // 3D Extrude Depth Layers
+                for (let d = 5; d >= 1; d--) {
+                    ctx.fillStyle = extrudeCol;
+                    ctx.globalAlpha = 0.22;
+                    ctx.fillText(text, x + d * 1.4, y + d * 1.4);
+                }
+                ctx.globalAlpha = 1.0;
+
+                // Chromatic Aberration RGB Split
+                if (rgbOffsetPx > 0.5) {
+                    ctx.globalCompositeOperation = 'screen';
+                    ctx.fillStyle = 'rgba(255, 42, 133, 0.88)';
+                    ctx.fillText(text, x - rgbOffsetPx, y);
+                    ctx.fillStyle = 'rgba(0, 245, 212, 0.88)';
+                    ctx.fillText(text, x + rgbOffsetPx, y);
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+
+                // Glow / Halation Bloom
+                if (halationAmt > 0.05) {
+                    ctx.shadowColor = extrudeCol;
+                    ctx.shadowBlur = halationAmt * 32;
+                }
+
+                ctx.fillStyle = fillStyle;
+                ctx.fillText(text, x, y);
+                ctx.restore();
+            }
+
+            // =================================================================
+            // 3. 60FPS CINEMATIC CANVAS RENDER ENGINE (5 SCENES)
+            // =================================================================
+            const canvas = document.getElementById('motionReelCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function renderSceneToContext(targetCtx, w, h, lutKey, sceneIdx, localT, globalT) {
+                const pal = getLutPalette(lutKey);
+                const beat = Math.abs(Math.sin(globalT * Math.PI * 2.15)); // ~129 BPM
+                const impulse = state.beatDropImpulse;
+                const rgbShift = (state.vfx.rgb / 100) * 9 + impulse * 16 + (beat > 0.92 ? 3 : 0);
+                const flareStrength = state.vfx.flare / 100;
+                const halationAmt = state.vfx.halation / 100;
+
+                // Background Gradient
+                const bgGrad = targetCtx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, pal.bgTop);
+                bgGrad.addColorStop(1, pal.bgBot);
+                targetCtx.fillStyle = bgGrad;
+                targetCtx.fillRect(0, 0, w, h);
+
+                targetCtx.save();
+                const zoomScale = 1 + impulse * 0.05 + (sceneIdx === 2 ? beat * 0.018 : 0);
+                const shakeX = impulse > 0.05 ? (Math.random() - 0.5) * 20 * impulse : 0;
+                const shakeY = impulse > 0.05 ? (Math.random() - 0.5) * 14 * impulse : 0;
+                targetCtx.translate(w / 2 + shakeX, h / 2 + shakeY);
+                targetCtx.scale(zoomScale, zoomScale);
+                targetCtx.translate(-w / 2, -h / 2);
+
+                const scaleFactor = Math.min(w / 1280, h / 720);
+
+                // -------------------------------------------------------------
+                // SCENE 01: NEON OVERDRIVE (3D Perspective City + Spring 3D Type)
+                // -------------------------------------------------------------
+                if (sceneIdx === 0) {
+                    const horizon = h * 0.68;
+
+                    // 3D Skyline Towers with Animated Neon Billboards
+                    for (let i = 0; i < 16; i++) {
+                        const bw = 92 * scaleFactor;
+                        const spacing = 104 * scaleFactor;
+                        const bx = ((i * spacing - globalT * 65) % (w + spacing * 2)) - spacing;
+                        const bh = (150 + ((i * 73) % 230)) * scaleFactor;
+                        targetCtx.fillStyle = 'rgba(8, 11, 22, 0.94)';
+                        targetCtx.fillRect(bx, horizon - bh, bw, bh);
+
+                        // Animated Hologram Billboard on Tower
+                        targetCtx.fillStyle = i % 2 === 0 ? pal.primary : pal.secondary;
+                        targetCtx.globalAlpha = 0.25 + 0.25 * Math.sin(globalT * 4 + i);
+                        targetCtx.fillRect(bx + 10 * scaleFactor, horizon - bh + 22 * scaleFactor, bw * 0.6, 18 * scaleFactor);
+                        targetCtx.globalAlpha = 1.0;
+                    }
+
+                    // 3D Perspective Highway Grid & Light Trails
+                    targetCtx.fillStyle = '#04060C';
+                    targetCtx.fillRect(0, horizon, w, h - horizon);
+                    targetCtx.strokeStyle = pal.primary;
+                    targetCtx.globalAlpha = 0.35;
+                    targetCtx.lineWidth = 1.5;
+                    for (let r = -4; r <= 4; r++) {
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(w / 2 + r * 35 * scaleFactor, horizon);
+                        targetCtx.lineTo(w / 2 + r * 240 * scaleFactor, h);
+                        targetCtx.stroke();
+                    }
+                    targetCtx.globalAlpha = 1.0;
+
+                    // Neon Rain Particles
+                    neonRain.forEach(drop => {
+                        const rx = (drop.x + globalT * 90) % w;
+                        const ry = (drop.y + globalT * drop.speed) % h;
+                        targetCtx.strokeStyle = drop.isPrimary ? pal.primary : pal.secondary;
+                        targetCtx.globalAlpha = 0.32;
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(rx, ry);
+                        targetCtx.lineTo(rx - 3, ry + drop.len);
+                        targetCtx.stroke();
+                    });
+                    targetCtx.globalAlpha = 1.0;
+
+                    // Spring-Animated 3D Extruded Brand Title
+                    const sp = springEase(Math.min(1, localT / 1.35));
+                    const titleSize = Math.round(68 * scaleFactor);
+                    draw3DKineticText(
+                        targetCtx,
+                        state.brandTitle.toUpperCase(),
+                        w / 2,
+                        h * 0.41 + (1 - sp) * 85,
+                        `800 ${titleSize}px "Syne", sans-serif`,
+                        '#FFFFFF',
+                        pal.primary,
+                        rgbShift,
+                        halationAmt
+                    );
+
+                    const subSize = Math.round(21 * scaleFactor);
+                    draw3DKineticText(
+                        targetCtx,
+                        state.brandTagline.toUpperCase(),
+                        w / 2,
+                        h * 0.53 + (1 - sp) * 50,
+                        `700 ${subSize}px "JetBrains Mono", monospace`,
+                        pal.primary,
+                        pal.secondary,
+                        rgbShift * 0.4,
+                        halationAmt * 0.6
+                    );
+                }
+
+                // -------------------------------------------------------------
+                // SCENE 02: BRAND VELOCITY (Orbital Rings & Particle Burst)
+                // -------------------------------------------------------------
+                else if (sceneIdx === 1) {
+                    const cx = w / 2, cy = h / 2;
+
+                    // Expanding Beat Shockwave Ring
+                    const waveR = ((localT * 260) % 420) * scaleFactor;
+                    targetCtx.save();
+                    targetCtx.strokeStyle = pal.primary;
+                    targetCtx.globalAlpha = Math.max(0, 1 - waveR / (420 * scaleFactor)) * 0.55;
+                    targetCtx.lineWidth = 3;
+                    targetCtx.beginPath();
+                    targetCtx.arc(cx, cy, waveR, 0, Math.PI * 2);
+                    targetCtx.stroke();
+                    targetCtx.restore();
+
+                    // Orbital Light Trails
+                    targetCtx.save();
+                    targetCtx.translate(cx, cy);
+                    for (let ring = 0; ring < 3; ring++) {
+                        targetCtx.rotate(globalT * (ring % 2 === 0 ? 0.85 : -0.65));
+                        targetCtx.strokeStyle = ring === 0 ? pal.primary : ring === 1 ? pal.secondary : pal.accent;
+                        targetCtx.lineWidth = 3;
+                        targetCtx.setLineDash([70, 35, 16, 35]);
+                        targetCtx.beginPath();
+                        targetCtx.arc(0, 0, (140 + ring * 65) * scaleFactor, 0, Math.PI * 2);
+                        targetCtx.stroke();
+                    }
+                    targetCtx.restore();
+
+                    // Exploding & Re-assembling Kinetic Particles
+                    const burstPhase = Math.sin(Math.min(1, localT / 1.4) * Math.PI);
+                    for (let p = 0; p < 36; p++) {
+                        const ang = (p / 36) * Math.PI * 2 + globalT;
+                        const dist = (40 + burstPhase * 230) * scaleFactor;
+                        const px = cx + Math.cos(ang) * dist;
+                        const py = cy + Math.sin(ang) * dist * 0.55;
+                        targetCtx.fillStyle = p % 2 === 0 ? pal.primary : pal.secondary;
+                        targetCtx.fillRect(px, py, 4 * scaleFactor, 4 * scaleFactor);
+                    }
+
+                    const titleSize = Math.round(62 * scaleFactor);
+                    draw3DKineticText(
+                        targetCtx,
+                        state.brandTitle.toUpperCase(),
+                        cx,
+                        h * 0.45,
+                        `800 ${titleSize}px "Syne", sans-serif`,
+                        '#FFFFFF',
+                        pal.secondary,
+                        rgbShift,
+                        halationAmt
+                    );
+                    draw3DKineticText(
+                        targetCtx,
+                        'ORBITAL MOTION & BRAND IDENTITY',
+                        cx,
+                        h * 0.57,
+                        `700 ${Math.round(19 * scaleFactor)}px "JetBrains Mono", monospace`,
+                        pal.accent,
+                        pal.primary,
+                        rgbShift * 0.4,
+                        0.4
+                    );
+                }
+
+                // -------------------------------------------------------------
+                // SCENE 03: KINETIC PULSE (3D Audio Spectrum & Cascade Type)
+                // -------------------------------------------------------------
+                else if (sceneIdx === 2) {
+                    const cx = w / 2, cy = h / 2;
+
+                    // Circular 3D Audio Spectrum Visualizer
+                    const bars = 48;
+                    const baseRad = 150 * scaleFactor;
+                    for (let b = 0; b < bars; b++) {
+                        const ang = (b / bars) * Math.PI * 2 - Math.PI / 2;
+                        const freqAmp = (0.3 + Math.abs(Math.sin(globalT * 5.5 + b * 0.45)) * 0.7 + impulse * 0.8) * 75 * scaleFactor;
+                        const x1 = cx + Math.cos(ang) * baseRad;
+                        const y1 = cy + Math.sin(ang) * baseRad;
+                        const x2 = cx + Math.cos(ang) * (baseRad + freqAmp);
+                        const y2 = cy + Math.sin(ang) * (baseRad + freqAmp);
+
+                        targetCtx.strokeStyle = b % 2 === 0 ? pal.primary : pal.secondary;
+                        targetCtx.lineWidth = 3 * scaleFactor;
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(x1, y1);
+                        targetCtx.lineTo(x2, y2);
+                        targetCtx.stroke();
+                    }
+
+                    // Layered Giant Kinetic Cascade
+                    const cascadeWords = ['60FPS PRECISION', 'AUDIO REACTIVE', state.brandTitle.toUpperCase()];
+                    cascadeWords.forEach((word, idx) => {
+                        const wy = h * 0.32 + idx * (115 * scaleFactor);
+                        const shiftX = Math.sin(globalT * 2.6 + idx * 1.3) * 55 * scaleFactor * (idx % 2 === 0 ? 1 : -1);
+                        const active = idx === 2 || Math.floor(localT * 2) % 3 === idx;
+                        draw3DKineticText(
+                            targetCtx,
+                            word,
+                            cx + shiftX,
+                            wy,
+                            `800 ${Math.round((active ? 56 : 44) * scaleFactor)}px "Syne", sans-serif`,
+                            active ? '#FFFFFF' : 'rgba(255,255,255,0.22)',
+                            active ? pal.primary : 'transparent',
+                            active ? rgbShift * 1.25 : 0,
+                            active ? halationAmt : 0
+                        );
+                    });
+                }
+
+                // -------------------------------------------------------------
+                // SCENE 04: CYBER NOIR GRADE (Warp-Speed Tunnel & Diagonal Wipe)
+                // -------------------------------------------------------------
+                else if (sceneIdx === 3) {
+                    const cx = w / 2, cy = h / 2;
+
+                    // Warp-Speed Light Tunnel Streaks
+                    warpStars.forEach(star => {
+                        const d1 = ((star.dist + globalT * star.speed) % 1);
+                        const d2 = Math.min(1, d1 + 0.14);
+                        const maxR = Math.max(w, h) * 0.75;
+                        const x1 = cx + Math.cos(star.angle) * (d1 * maxR);
+                        const y1 = cy + Math.sin(star.angle) * (d1 * maxR);
+                        const x2 = cx + Math.cos(star.angle) * (d2 * maxR);
+                        const y2 = cy + Math.sin(star.angle) * (d2 * maxR);
+
+                        targetCtx.strokeStyle = star.colType === 0 ? pal.primary : star.colType === 1 ? pal.secondary : pal.accent;
+                        targetCtx.globalAlpha = d1 * 0.85;
+                        targetCtx.lineWidth = (1 + d1 * 3) * scaleFactor;
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(x1, y1);
+                        targetCtx.lineTo(x2, y2);
+                        targetCtx.stroke();
+                    });
+                    targetCtx.globalAlpha = 1.0;
+
+                    draw3DKineticText(
+                        targetCtx,
+                        'CINEMATIC COLOR GRADE',
+                        cx,
+                        h * 0.44,
+                        `800 ${Math.round(58 * scaleFactor)}px "Syne", sans-serif`,
+                        '#FFFFFF',
+                        pal.primary,
+                        rgbShift * 1.15,
+                        halationAmt
+                    );
+                    draw3DKineticText(
+                        targetCtx,
+                        `LUT: ${lutKey.toUpperCase()} • ACEScct`,
+                        cx,
+                        h * 0.56,
+                        `700 ${Math.round(20 * scaleFactor)}px "JetBrains Mono", monospace`,
+                        pal.primary,
+                        pal.secondary,
+                        0,
+                        0.4
+                    );
+                }
+
+                // -------------------------------------------------------------
+                // SCENE 05: READY TO LAUNCH (Hologram Closing Card & 4K Badge)
+                // -------------------------------------------------------------
+                else {
+                    const cx = w / 2, cy = h / 2;
+                    const cardW = Math.min(w * 0.78, 760 * scaleFactor);
+                    const cardH = Math.min(h * 0.54, 340 * scaleFactor);
+                    const cardX = cx - cardW / 2;
+                    const cardY = cy - cardH / 2;
+
+                    // Glass Closing Card
+                    targetCtx.fillStyle = 'rgba(10, 14, 26, 0.82)';
+                    targetCtx.strokeStyle = pal.primary;
+                    targetCtx.lineWidth = 2;
+                    targetCtx.fillRect(cardX, cardY, cardW, cardH);
+                    targetCtx.strokeRect(cardX, cardY, cardW, cardH);
+
+                    // Moving Hologram Scanline inside Card
+                    const scanY = cardY + ((globalT * 140) % cardH);
+                    targetCtx.fillStyle = pal.primary;
+                    targetCtx.globalAlpha = 0.25;
+                    targetCtx.fillRect(cardX, scanY, cardW, 4);
+                    targetCtx.globalAlpha = 1.0;
+
+                    // Badge '4K 60FPS READY'
+                    const badgeW = 210 * scaleFactor;
+                    const badgeH = 32 * scaleFactor;
+                    targetCtx.fillStyle = pal.secondary;
+                    targetCtx.fillRect(cx - badgeW / 2, cardY + 34 * scaleFactor, badgeW, badgeH);
+                    targetCtx.fillStyle = '#FFFFFF';
+                    targetCtx.font = `700 ${Math.round(14 * scaleFactor)}px "JetBrains Mono", monospace`;
+                    targetCtx.textAlign = 'center';
+                    targetCtx.textBaseline = 'middle';
+                    targetCtx.fillText('4K 60FPS READY', cx, cardY + 34 * scaleFactor + badgeH / 2);
+
+                    draw3DKineticText(
+                        targetCtx,
+                        state.brandTitle.toUpperCase(),
+                        cx,
+                        cy + 8 * scaleFactor,
+                        `800 ${Math.round(54 * scaleFactor)}px "Syne", sans-serif`,
+                        '#FFFFFF',
+                        pal.primary,
+                        rgbShift * 0.7,
+                        halationAmt
+                    );
+
+                    draw3DKineticText(
+                        targetCtx,
+                        'YOUTUBE UHD • REELS VERTICAL • MASTER PRORES',
+                        cx,
+                        cy + 74 * scaleFactor,
+                        `700 ${Math.round(16 * scaleFactor)}px "JetBrains Mono", monospace`,
+                        pal.primary,
+                        'transparent',
+                        0,
+                        0
+                    );
+                }
+
+                // Anamorphic Horizontal Lens Flare
+                if (flareStrength > 0.04) {
+                    const flareY = h * 0.46 + Math.sin(globalT * 1.5) * 24;
+                    const flareGrad = targetCtx.createLinearGradient(0, flareY, w, flareY);
+                    flareGrad.addColorStop(0, 'transparent');
+                    flareGrad.addColorStop(0.28, pal.primary);
+                    flareGrad.addColorStop(0.5, '#FFFFFF');
+                    flareGrad.addColorStop(0.72, pal.secondary);
+                    flareGrad.addColorStop(1, 'transparent');
+
+                    targetCtx.save();
+                    targetCtx.globalCompositeOperation = 'screen';
+                    targetCtx.globalAlpha = flareStrength * (0.32 + beat * 0.25 + impulse * 0.42);
+                    targetCtx.fillStyle = flareGrad;
+                    targetCtx.fillRect(0, flareY - 2, w, 4);
+                    targetCtx.fillRect(w * 0.12, flareY - 12, w * 0.76, 24);
+                    targetCtx.restore();
+                }
+
+                // Transition Wipe Flash at start of scene
+                if (localT < 0.25) {
+                    targetCtx.fillStyle = `rgba(255, 255, 255, ${(1 - localT / 0.25) * 0.42})`;
+                    targetCtx.fillRect(0, 0, w, h);
+                }
+
+                targetCtx.restore();
+            }
+
+            // Master Frame Render (Before/After Split, Film Grain, Vignette & Safe-Zone)
+            function renderMasterFrame() {
+                const w = canvas.width;
+                const h = canvas.height;
+                const sceneIdx = Math.min(4, Math.floor(state.currentTime / SCENE_DURATION));
+                const localT = state.currentTime % SCENE_DURATION;
+
+                const splitOverlay = document.getElementById('split-drag-overlay');
+
+                if (state.splitCompare) {
+                    splitOverlay.classList.remove('hidden');
+                    const splitX = (state.splitPos / 100) * w;
+
+                    // Left: Raw Log (Un-graded)
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.rect(0, 0, splitX, h);
+                    ctx.clip();
+                    renderSceneToContext(ctx, w, h, 'raw_log', sceneIdx, localT, state.currentTime);
+                    ctx.restore();
+
+                    // Right: Active Graded LUT
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.rect(splitX, 0, w - splitX, h);
+                    ctx.clip();
+                    renderSceneToContext(ctx, w, h, state.lut, sceneIdx, localT, state.currentTime);
+                    ctx.restore();
+                } else {
+                    splitOverlay.classList.add('hidden');
+                    renderSceneToContext(ctx, w, h, state.lut, sceneIdx, localT, state.currentTime);
+                }
+
+                // 35mm Cinematic Film Grain
+                const grainAmt = state.vfx.grain / 100;
+                if (grainAmt > 0.02) {
+                    ctx.save();
+                    ctx.fillStyle = `rgba(255, 255, 255, ${grainAmt * 0.085})`;
+                    const count = Math.floor(grainAmt * 440);
+                    for (let i = 0; i < count; i++) {
+                        ctx.fillRect(Math.random() * w, Math.random() * h, 2, 2);
+                    }
+                    ctx.restore();
+                }
+
+                // Optical Vignette
+                const vigAmt = state.vfx.vignette / 100;
+                if (vigAmt > 0.02) {
+                    const vigGrad = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.72);
+                    vigGrad.addColorStop(0, 'rgba(0,0,0,0)');
+                    vigGrad.addColorStop(1, `rgba(0,0,0,${vigAmt * 0.78})`);
+                    ctx.fillStyle = vigGrad;
+                    ctx.fillRect(0, 0, w, h);
+                }
+
+                // Safe-Zone Guides
+                if (state.showSafeZone) {
+                    ctx.save();
+                    ctx.strokeStyle = 'rgba(0, 245, 212, 0.7)';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([8, 6]);
+                    ctx.strokeRect(w * 0.05, h * 0.05, w * 0.9, h * 0.9);
+                    ctx.strokeStyle = 'rgba(255, 183, 3, 0.8)';
+                    ctx.strokeRect(w * 0.1, h * 0.1, w * 0.8, h * 0.8);
+                    ctx.restore();
+                }
+            }
+
+            // =================================================================
+            // 4. LIVE LUMETRI RGB PARADE & LUMA SCOPE
+            // =================================================================
+            const scopeCanvas = document.getElementById('lumetriScopeCanvas');
+            const scopeCtx = scopeCanvas.getContext('2d');
+
+            function updateLumetriScope(globalT) {
+                const sw = scopeCanvas.width;
+                const sh = scopeCanvas.height;
+                const pal = getLutPalette(state.lut);
+
+                scopeCtx.fillStyle = '#040509';
+                scopeCtx.fillRect(0, 0, sw, sh);
+
+                // IRE Graticule Lines
+                scopeCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                scopeCtx.lineWidth = 1;
+                [0.25, 0.5, 0.75].forEach(r => {
+                    scopeCtx.beginPath();
+                    scopeCtx.moveTo(0, sh * r);
+                    scopeCtx.lineTo(sw, sh * r);
+                    scopeCtx.stroke();
+                });
+
+                // 3 Parade Channels: Red, Green, Blue
+                const channels = [
+                    { col: '#FF2A85', offset: 0, phase: 0.4, boost: state.lut === 'blade_amber' ? 1.25 : 1.0 },
+                    { col: '#00F5D4', offset: sw / 3, phase: 1.8, boost: state.lut === 'neo_emerald' ? 1.25 : 1.0 },
+                    { col: '#38BDF8', offset: (sw / 3) * 2, phase: 3.1, boost: state.lut === 'tokyo_blue' ? 1.25 : 1.0 }
+                ];
+
+                const colW = sw / 3 - 4;
+                channels.forEach(ch => {
+                    scopeCtx.fillStyle = ch.col;
+                    scopeCtx.globalAlpha = 0.75;
+                    for (let x = 2; x < colW; x += 3) {
+                        const wave = Math.sin(globalT * 4.2 + x * 0.08 + ch.phase) * 0.25
+                                   + Math.cos(globalT * 2.5 - x * 0.14) * 0.2
+                                   + 0.45 + state.beatDropImpulse * 0.25;
+                        const barH = Math.max(4, Math.min(sh - 6, wave * sh * 0.65 * ch.boost));
+                        scopeCtx.fillRect(ch.offset + x, sh - barH - 2, 2, barH);
+                    }
+                });
+                scopeCtx.globalAlpha = 1.0;
+            }
+
+            // =================================================================
+            // 5. STORYBOARD THUMBNAILS & TIMELINE SYNC
+            // =================================================================
+            function renderStoryboardThumbnails() {
+                for (let i = 0; i < 5; i++) {
+                    const tc = document.getElementById(`thumb-scene-${i}`);
+                    if (!tc) continue;
+                    const tctx = tc.getContext('2d');
+                    renderSceneToContext(tctx, tc.width, tc.height, state.lut, i, 2.2, i * 6 + 2.2);
+                }
+            }
+
+            function formatSMPTE(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                const frames = Math.floor((seconds % 1) * 60);
+                return `00:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:${String(frames).padStart(2, '0')}`;
+            }
+
+            function syncTimelineUI() {
+                document.getElementById('smpte-timecode').textContent = formatSMPTE(state.currentTime);
+                const pct = (state.currentTime / TOTAL_DURATION) * 100;
+                document.getElementById('reel-scrubber-fill').style.width = `${pct}%`;
+
+                const nlePlayhead = document.getElementById('nle-playhead');
+                if (nlePlayhead) {
+                    nlePlayhead.style.left = `${16.8 + pct * 0.825}%`;
+                }
+
+                const sceneIdx = Math.min(4, Math.floor(state.currentTime / SCENE_DURATION));
+                if (sceneIdx !== state.lastSceneIdx) {
+                    state.lastSceneIdx = sceneIdx;
+                    playSoundFX('whoosh');
+                    document.getElementById('active-scene-title').textContent = sceneMeta[sceneIdx].title;
+
+                    document.querySelectorAll('.scene-pill-btn').forEach(btn => {
+                        const idx = Number(btn.getAttribute('data-scene'));
+                        btn.className = idx === sceneIdx
+                            ? 'scene-pill-btn px-2.5 py-1 rounded-lg bg-neonCyan text-[#050509] font-bold transition'
+                            : 'scene-pill-btn px-2.5 py-1 rounded-lg bg-white/5 text-slate-400 hover:text-white transition';
+                    });
+
+                    document.querySelectorAll('.storyboard-card').forEach(card => {
+                        const idx = Number(card.getAttribute('data-scene'));
+                        card.className = idx === sceneIdx
+                            ? 'storyboard-card p-2 rounded-xl bg-[#0D111E] border-2 border-neonCyan text-left transition group glow-cyan'
+                            : 'storyboard-card p-2 rounded-xl bg-[#070910] border border-white/10 hover:border-white/30 text-left transition group';
+                    });
+                }
+            }
+
+            function buildAudioWaveform() {
+                const container = document.getElementById('audio-waveform-bars');
+                let html = '';
+                for (let i = 0; i < 100; i++) {
+                    const hPct = 22 + Math.abs(Math.sin(i * 0.42) * 65 + Math.cos(i * 1.15) * 15);
+                    const isBeatMarker = i % 20 === 0;
+                    html += `<span class="flex-1 rounded-full ${isBeatMarker ? 'bg-neonMagenta' : 'bg-emerald-400/75'}" style="height:${Math.min(95, Math.round(hPct))}%"></span>`;
+                }
+                container.innerHTML = html;
+            }
+
+            // =================================================================
+            // 6. INTERACTIVE CONTROLS & DRAGGABLE SPLIT WIPE
+            // =================================================================
+            // Draggable Split-Screen Wipe directly on Canvas
+            const splitOverlay = document.getElementById('split-drag-overlay');
+            const splitLine = document.getElementById('split-divider-line');
+            let isDraggingSplit = false;
+
+            function updateSplitPosition(clientX) {
+                const rect = splitOverlay.getBoundingClientRect();
+                const pct = Math.max(8, Math.min(92, ((clientX - rect.left) / rect.width) * 100));
+                state.splitPos = pct;
+                splitLine.style.left = `${pct}%`;
+                renderMasterFrame();
+            }
+
+            splitOverlay.addEventListener('mousedown', (e) => { isDraggingSplit = true; updateSplitPosition(e.clientX); });
+            window.addEventListener('mousemove', (e) => { if (isDraggingSplit) updateSplitPosition(e.clientX); });
+            window.addEventListener('mouseup', () => { isDraggingSplit = false; });
+
+            splitOverlay.addEventListener('touchstart', (e) => {
+                isDraggingSplit = true;
+                if (e.touches.length > 0) updateSplitPosition(e.touches[0].clientX);
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (isDraggingSplit && e.touches.length > 0) updateSplitPosition(e.touches[0].clientX);
+            }, { passive: true });
+            window.addEventListener('touchend', () => { isDraggingSplit = false; });
+
+            // Aspect Ratio Switcher
+            function setAspectRatio(ratio) {
+                state.aspectRatio = ratio;
+                const box = document.getElementById('viewport-frame-box');
+                const badge = document.getElementById('viewer-res-badge');
+
+                document.querySelectorAll('.aspect-btn').forEach(btn => {
+                    const active = btn.getAttribute('data-aspect') === ratio;
+                    btn.className = active
+                        ? 'aspect-btn px-2.5 py-1.5 rounded-lg font-bold bg-neonCyan text-[#050509] shadow transition'
+                        : 'aspect-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+                });
+
+                if (ratio === '16:9') {
+                    canvas.width = 1280; canvas.height = 720;
+                    box.className = 'relative w-full max-w-[840px] aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/15 transition-all duration-500 select-none';
+                    badge.textContent = '3840×2160 • 16:9 ACES';
+                } else if (ratio === '9:16') {
+                    canvas.width = 720; canvas.height = 1280;
+                    box.className = 'relative w-full max-w-[260px] sm:max-w-[285px] aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-neonMagenta/55 transition-all duration-500 select-none';
+                    badge.textContent = '1080×1920 • 9:16 REELS';
+                } else {
+                    canvas.width = 1434; canvas.height = 600;
+                    box.className = 'relative w-full max-w-[880px] aspect-[21/9] rounded-xl overflow-hidden shadow-2xl border border-neonAmber/55 transition-all duration-500 select-none';
+                    badge.textContent = '4096×1716 • 2.39:1 SCOPE';
+                }
+                updateExportSummary();
+                renderMasterFrame();
+            }
+
+            document.querySelectorAll('.aspect-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playSoundFX('click');
+                    const r = btn.getAttribute('data-aspect');
+                    setAspectRatio(r);
+                    showToast('Format Rasio Aktif', `Viewport disesuaikan ke ${r}.`, 'cyan');
+                });
+            });
+
+            // Audio Toggle + Header Equalizer Bars
+            document.getElementById('btn-toggle-audio').addEventListener('click', () => {
+                state.audioEnabled = !state.audioEnabled;
+                const icon = document.getElementById('audio-icon');
+                const label = document.getElementById('audio-label');
+                const eqBars = document.querySelectorAll('#header-eq-bars span');
+
+                if (state.audioEnabled) {
+                    initAudio();
+                    playSoundFX('whoosh');
+                    icon.className = 'fa-solid fa-volume-high';
+                    label.textContent = 'SYNTH & SFX: ON';
+                    eqBars.forEach(b => b.classList.add('eq-bar-active'));
+                    showToast('Audio Reactive Synth Aktif', 'Transisi whoosh & sub-bass beat pulse aktif.', 'amber');
+                } else {
+                    icon.className = 'fa-solid fa-volume-xmark';
+                    label.textContent = 'SYNTH & SFX: OFF';
+                    eqBars.forEach(b => b.classList.remove('eq-bar-active'));
+                }
+            });
+
+            // Play / Pause & Speed
+            document.getElementById('btn-play-pause').addEventListener('click', () => {
+                state.isPlaying = !state.isPlaying;
+                playSoundFX('click');
+                document.getElementById('play-icon').className = state.isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+                document.getElementById('play-label').textContent = state.isPlaying ? 'PAUSE' : 'PLAY';
+            });
+
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playSoundFX('click');
+                    document.querySelectorAll('.speed-btn').forEach(b => {
+                        b.className = 'speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white transition';
+                    });
+                    btn.className = 'speed-btn px-2 py-1 rounded-lg bg-white/15 text-white font-bold transition';
+                    state.playbackSpeed = parseFloat(btn.getAttribute('data-speed'));
+                });
+            });
+
+            // Safe-Zone & Beat Drop
+            document.getElementById('btn-toggle-safezone').addEventListener('click', (e) => {
+                playSoundFX('click');
+                state.showSafeZone = !state.showSafeZone;
+                e.currentTarget.innerHTML = state.showSafeZone
+                    ? '<i class="fa-solid fa-crop-simple mr-1.5 text-neonCyan"></i>Safe-Zone: ON'
+                    : '<i class="fa-solid fa-crop-simple mr-1.5 text-neonCyan"></i>Safe-Zone: OFF';
+                renderMasterFrame();
+            });
+
+            document.getElementById('btn-beat-drop').addEventListener('click', () => {
+                state.beatDropImpulse = 1.0;
+                playSoundFX('bass');
+                playSoundFX('whoosh');
+                showToast('BEAT DROP // GLITCH BURST!', 'Screen-shake, RGB split & sub-bass impulse dipicu.', 'magenta');
+            });
+
+            // Scrubber, Scene Pills, Storyboard & NLE Clips
+            document.getElementById('reel-scrubber-track').addEventListener('click', (e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                state.currentTime = ratio * TOTAL_DURATION;
+                playSoundFX('whoosh');
+                syncTimelineUI();
+                renderMasterFrame();
+            });
+
+            document.querySelectorAll('.scene-pill-btn, .storyboard-card, .nle-clip').forEach(el => {
+                el.addEventListener('click', () => {
+                    const sc = Number(el.getAttribute('data-scene'));
+                    state.currentTime = sc * SCENE_DURATION + 0.05;
+                    state.beatDropImpulse = 0.75;
+                    playSoundFX('whoosh');
+                    syncTimelineUI();
+                    renderMasterFrame();
+                });
+            });
+
+            // Color LUT Presets & Split Checkbox
+            document.querySelectorAll('.lut-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playSoundFX('click');
+                    document.querySelectorAll('.lut-btn').forEach(b => {
+                        const isWide = b.classList.contains('col-span-2');
+                        b.className = `lut-btn ${isWide ? 'col-span-2' : ''} p-2 rounded-xl bg-[#070910] border border-white/10 text-slate-300 hover:border-white/25 text-left transition flex items-center justify-between gap-2`;
+                    });
+                    const isWide = btn.classList.contains('col-span-2');
+                    btn.className = `lut-btn ${isWide ? 'col-span-2' : ''} p-2 rounded-xl bg-[#121729] border-2 border-neonCyan text-white text-left transition flex items-center justify-between gap-2`;
+                    state.lut = btn.getAttribute('data-lut');
+                    updateExportSummary();
+                    renderStoryboardThumbnails();
+                    renderMasterFrame();
+                });
+            });
+
+            document.getElementById('chk-split-compare').addEventListener('change', (e) => {
+                state.splitCompare = e.target.checked;
+                renderMasterFrame();
+                if (state.splitCompare) {
+                    showToast('Split Wipe Aktif', 'Geser garis pembatas di atas viewport untuk membandingkan Raw vs LUT.', 'cyan');
+                }
+            });
+
+            // VFX Sliders
+            const bindVfx = (id, valId, key) => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    const v = Number(e.target.value);
+                    state.vfx[key] = v;
+                    document.getElementById(valId).textContent = `${v}%`;
+                    renderMasterFrame();
+                });
+            };
+            bindVfx('slider-rgb', 'val-rgb', 'rgb');
+            bindVfx('slider-flare', 'val-flare', 'flare');
+            bindVfx('slider-halation', 'val-halation', 'halation');
+            bindVfx('slider-grain', 'val-grain', 'grain');
+            bindVfx('slider-vignette', 'val-vignette', 'vignette');
+
+            document.getElementById('btn-reset-vfx').addEventListener('click', () => {
+                playSoundFX('click');
+                state.vfx = { rgb: 35, flare: 65, halation: 55, grain: 25, vignette: 45 };
+                state.customAccent = null;
+                document.getElementById('picker-custom-accent').value = '#00F5D4';
+                document.getElementById('slider-rgb').value = 35; document.getElementById('val-rgb').textContent = '35%';
+                document.getElementById('slider-flare').value = 65; document.getElementById('val-flare').textContent = '65%';
+                document.getElementById('slider-halation').value = 55; document.getElementById('val-halation').textContent = '55%';
+                document.getElementById('slider-grain').value = 25; document.getElementById('val-grain').textContent = '25%';
+                document.getElementById('slider-vignette').value = 45; document.getElementById('val-vignette').textContent = '45%';
+                renderStoryboardThumbnails();
+                renderMasterFrame();
+                showToast('VFX & Warna Direset', 'Parameter kembali ke standar studio.', 'cyan');
+            });
+
+            // Brand Title, Tagline & Custom Neon Accent Picker
+            document.getElementById('input-brand-title').addEventListener('input', (e) => {
+                state.brandTitle = e.target.value || 'NEON CITY // STUDIO';
+                renderStoryboardThumbnails();
+                renderMasterFrame();
+            });
+            document.getElementById('input-brand-tagline').addEventListener('input', (e) => {
+                state.brandTagline = e.target.value || 'KINETIC VISUALS • 60FPS';
+                renderMasterFrame();
+            });
+            document.getElementById('picker-custom-accent').addEventListener('input', (e) => {
+                state.customAccent = e.target.value;
+                renderStoryboardThumbnails();
+                renderMasterFrame();
+            });
+
+            // Deliverable Cards
+            document.querySelectorAll('.deliverable-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const asp = card.getAttribute('data-deliverable-aspect');
+                    const sc = Number(card.getAttribute('data-deliverable-scene'));
+                    setAspectRatio(asp);
+                    state.currentTime = sc * SCENE_DURATION + 0.1;
+                    state.beatDropImpulse = 0.85;
+                    playSoundFX('whoosh');
+                    syncTimelineUI();
+                    renderMasterFrame();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    showToast(`Format ${asp} Dimuat`, `Pratinjau adegan 0${sc + 1} pada rasio ${asp}.`, 'cyan');
+                });
+            });
+
+            // =================================================================
+            // 7. RENDER & EXPORT MODAL WITH LIVE PREVIEW FEED
+            // =================================================================
+            const exportModal = document.getElementById('export-modal');
+            const exportPreviewCanvas = document.getElementById('exportPreviewCanvas');
+            const exportPreviewCtx = exportPreviewCanvas.getContext('2d');
+            let renderTimer = null;
+
+            function updateExportSummary() {
+                document.getElementById('export-spec-summary').textContent = `${state.aspectRatio} • ${state.lut.toUpperCase()}`;
+            }
+
+            document.getElementById('btn-open-export').addEventListener('click', () => {
+                playSoundFX('click');
+                updateExportSummary();
+                document.getElementById('export-progress-bar').style.width = '0%';
+                document.getElementById('export-percent-text').textContent = '0%';
+                document.getElementById('export-status-text').textContent = 'Siap merender komposisi 30.00 detik...';
+                exportModal.classList.remove('hidden');
+                exportModal.classList.add('flex');
+            });
+
+            document.getElementById('btn-close-export').addEventListener('click', () => {
+                if (renderTimer) clearInterval(renderTimer);
+                exportModal.classList.add('hidden');
+                exportModal.classList.remove('flex');
+            });
+
+            document.getElementById('btn-start-render').addEventListener('click', () => {
+                if (renderTimer) clearInterval(renderTimer);
+                playSoundFX('whoosh');
+                let pct = 0;
+                const preset = document.getElementById('export-preset-select').value;
+                document.getElementById('export-status-text').textContent = `Encoding ${preset}...`;
+
+                renderTimer = setInterval(() => {
+                    pct += 5;
+                    if (pct >= 100) {
+                        pct = 100;
+                        clearInterval(renderTimer);
+                        playSoundFX('bass');
+                        document.getElementById('export-status-text').textContent = 'Render Selesai! Master siap tayang.';
+                        showToast('Render Master Selesai!', `Paket ${preset} siap didistribusikan.`, 'cyan');
+                    }
+                    document.getElementById('export-progress-bar').style.width = `${pct}%`;
+                    document.getElementById('export-percent-text').textContent = `${pct}%`;
+                }, 70);
+            });
+
+            document.getElementById('btn-download-snapshot').addEventListener('click', () => {
+                playSoundFX('click');
+                renderMasterFrame();
+                const link = document.createElement('a');
+                link.download = `neon_city_master_${state.aspectRatio.replace(':', 'x')}_${state.lut}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('High-Res Snapshot PNG Diunduh!', 'Frame resolusi tinggi berhasil disimpan.', 'amber');
+            });
+
+            // =================================================================
+            // 8. 60FPS MAIN LOOP + BEAT-REACTIVE AMBIENT AURORA
+            // =================================================================
+            let lastTs = 0;
+            let fpsCount = 0;
+            let fpsTimer = 0;
+
+            function mainLoop(timestamp) {
+                if (!lastTs) lastTs = timestamp;
+                const dt = Math.min(0.05, (timestamp - lastTs) / 1000);
+                lastTs = timestamp;
+
+                fpsCount++;
+                if (timestamp - fpsTimer >= 500) {
+                    const measured = Math.min(60, Math.round((fpsCount * 1000) / (timestamp - fpsTimer)));
+                    document.getElementById('live-fps-readout').textContent = `${measured}.00 FPS`;
+                    fpsCount = 0;
+                    fpsTimer = timestamp;
+                }
+
+                if (state.isPlaying) {
+                    state.currentTime += dt * state.playbackSpeed;
+                    if (state.currentTime >= TOTAL_DURATION) state.currentTime = 0;
+
+                    state.beatPulseAccumulator += dt * state.playbackSpeed;
+                    if (state.beatPulseAccumulator >= 1.5) {
+                        state.beatPulseAccumulator = 0;
+                        playSoundFX('bass');
+                    }
+                }
+
+                if (state.beatDropImpulse > 0) {
+                    state.beatDropImpulse = Math.max(0, state.beatDropImpulse - dt * 2.5);
+                }
+
+                // Dynamic Beat-Reactive Ambient Aurora Orbs
+                const beatScale = 1 + Math.abs(Math.sin(state.currentTime * Math.PI * 2.15)) * 0.08 + state.beatDropImpulse * 0.16;
+                const orbCyan = document.getElementById('aurora-orb-cyan');
+                const orbMag = document.getElementById('aurora-orb-magenta');
+                if (orbCyan) orbCyan.style.transform = `scale(${beatScale.toFixed(3)})`;
+                if (orbMag) orbMag.style.transform = `scale(${(2.05 - beatScale * 0.95).toFixed(3)})`;
+
+                syncTimelineUI();
+                renderMasterFrame();
+                updateLumetriScope(state.currentTime);
+
+                // Mirror live canvas to export modal preview if open
+                if (!exportModal.classList.contains('hidden')) {
+                    exportPreviewCtx.drawImage(canvas, 0, 0, exportPreviewCanvas.width, exportPreviewCanvas.height);
+                }
+
+                requestAnimationFrame(mainLoop);
+            }
+
+            window.onload = function () {
+                buildAudioWaveform();
+                setAspectRatio('16:9');
+                renderStoryboardThumbnails();
+                syncTimelineUI();
+                renderMasterFrame();
+                requestAnimationFrame(mainLoop);
+            };
+        })();
+    </script>
+</body>
+</html>
